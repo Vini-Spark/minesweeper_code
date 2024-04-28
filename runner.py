@@ -1,6 +1,11 @@
 import pygame
 import sys
 import time
+from math import factorial
+
+
+from cell_functions import process_revealed_cells
+
 
 from minesweeper import Minesweeper, MinesweeperAI
 
@@ -167,7 +172,7 @@ while True:
     text = "Lost" if lost else "Won" if game.mines == flags else ""
     text = mediumFont.render(text, True, WHITE)
     textRect = text.get_rect()
-    textRect.center = ((5 / 6) * width, (2 / 3) * height)
+    textRect.center = ((5 / 6) * width, (2.5 / 3) * height)
     screen.blit(text, textRect)
 
     move = None
@@ -202,6 +207,26 @@ while True:
             else:
                 print("AI making safe move.")
             time.sleep(0.2)
+            
+            
+        # If Probability button clicked, show cells probability
+        # if probabilityButton.collidepoint(mouse) and not lost:
+            
+            # Calculate the probability of mines in cells
+            
+            
+            
+            # move = ai.make_safe_move()
+            # if move is None:
+            #     move = ai.make_random_move()
+            #     if move is None:
+            #         flags = ai.mines.copy()
+            #         print("No moves left to make.")
+            #     else:
+            #         print("No known safe moves, AI making random move.")
+            # else:
+            #     print("AI making safe move.")
+            # time.sleep(0.2)
 
         # Reset game state
         elif resetButton.collidepoint(mouse):
@@ -229,5 +254,18 @@ while True:
             nearby = game.nearby_mines(move)
             revealed.add(move)
             ai.add_knowledge(move, nearby)
+            
+            # Nearby can be 0 but I think that is better to add the condition on the grid arrangement, or not?
+            if nearby == 0:
+                game, ai, revealed = process_revealed_cells(game, ai, move, revealed, HEIGHT, WIDTH)
+                      
 
     pygame.display.flip()
+
+
+
+# Export functions later
+
+def binomial_coefficient(n, k):
+    return factorial(n) // (factorial(k) * factorial(n - k))
+
